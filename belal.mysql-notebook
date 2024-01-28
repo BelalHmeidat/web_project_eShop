@@ -1,0 +1,339 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "Script",
+    "content": "use souvenir_store;\nCREATE TABLE catagory (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE product (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    description VARCHAR(500),\n    catagory INT,\n    FOREIGN key (catagory) references catagory(id),\n    price FLOAT NOT NULL,\n    amount INT NOT NULL,\n    remarks VARCHAR(500)\n);\nALTER TABLE product AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE image (\n    name VARCHAR(30) PRIMARY KEY,\n    product INT(10),\n    FOREIGN KEY (product) references product(id)\n);\nCREATE TABLE paymentInfo (\n    creditCardNo VARCHAR(16) PRIMARY KEY,\n    cardExpiration DATE NOT NULL,\n    holderName VARCHAR(50) NOT NULL,\n    bank VARCHAR(20) NOT NULL \n);\n\nCREATE TABLE user (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    houseNO VARCHAR(20) NOT NULL,\n    street VARCHAR(50) NOT NULL,\n    city VARCHAR(30) NOT NULL,\n    country VARCHAR (30) NOT NULL,\n    dob DATE NOT NULL,\n    identificationNO VARCHAR(30) UNIQUE NOT NULL,\n    email VARCHAR(50) NOT NULL UNIQUE,\n    tel VARCHAR(20) NOT NULL,\n    payment VARCHAR(16) NOT NULL,\n    FOREIGN KEY (payment) REFERENCES paymentInfo(creditCardNo),\n    password VARCHAR(12) NOT NULL,\n    username VARCHAR(13) NOT NULL UNIQUE\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE manager (\n    username VARCHAR(13) PRIMARY KEY,\n    password VARCHAR(12) NOT NULL\n);\n\n\n-- CREATE TABLE cart (\n  --  id INT AUTO_INCREMENT PRIMARY KEY,\n    \n--)\n\nINSERT INTO manager VALUE ('BelalHmeidat', 'password');\n\nINSERT INTO paymentInfo (creditCardNo, cardExpiration, holderName, bank)  VALUE ('0000111122223333', '2028-10-20', 'Muhammad Rabbi', 'BOP');\n\nINSERT INTO user VALUE ();\n\nSELECT * from user;\n",
+    "options": {
+        "tabSize": 4,
+        "indentSize": 4,
+        "insertSpaces": true,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 46,
+                    "column": 25
+                },
+                "position": {
+                    "lineNumber": 46,
+                    "column": 25
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 39,
+                "column": 1
+            },
+            "firstPositionDeltaTop": 0
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 64,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "68bea737-6695-4524-897c-3e25b308596d"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 19
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 19,
+                            "length": 96
+                        },
+                        "contentStart": 20,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 115,
+                            "length": 277
+                        },
+                        "contentStart": 117,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 392,
+                            "length": 49
+                        },
+                        "contentStart": 393,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 441,
+                            "length": 129
+                        },
+                        "contentStart": 443,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 570,
+                            "length": 174
+                        },
+                        "contentStart": 571,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 744,
+                            "length": 575
+                        },
+                        "contentStart": 746,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1319,
+                            "length": 99
+                        },
+                        "contentStart": 1321,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1418,
+                            "length": 132
+                        },
+                        "contentStart": 1484,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1550,
+                            "length": 142
+                        },
+                        "contentStart": 1552,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1692,
+                            "length": 6
+                        },
+                        "contentStart": 1694,
+                        "state": 3
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1692,
+                            "length": 28
+                        },
+                        "contentStart": 1694,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1720,
+                            "length": 2
+                        },
+                        "contentStart": 1719,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "f1ce7e7c-ef17-45b7-c463-4ebdc46e04ae",
+                    "resultId": "68bea737-6695-4524-897c-3e25b308596d",
+                    "rows": [
+                        {
+                            "0": 1000000000,
+                            "1": "Belal Hmeidat",
+                            "2": "12",
+                            "3": "Qurna, Surif",
+                            "4": "Hebron",
+                            "5": "Palestinian Territories",
+                            "6": "2001-10-20",
+                            "7": "1213141",
+                            "8": "bhmeid00@estudiantes.unileon.es",
+                            "9": "592784450",
+                            "10": "1111222233334444",
+                            "11": "123456",
+                            "12": "bbbb"
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "id",
+                            "field": "0",
+                            "dataType": {
+                                "type": 4
+                            }
+                        },
+                        {
+                            "title": "name",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "houseNO",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "street",
+                            "field": "3",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "city",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "country",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "dob",
+                            "field": "6",
+                            "dataType": {
+                                "type": 28
+                            }
+                        },
+                        {
+                            "title": "identificationNO",
+                            "field": "7",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "email",
+                            "field": "8",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "tel",
+                            "field": "9",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "payment",
+                            "field": "10",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "password",
+                            "field": "11",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "username",
+                            "field": "12",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 1 record retrieved in 0.792ms"
+                    },
+                    "totalRowCount": 1,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "\nSELECT * from user;"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 65,
+                "end": 65,
+                "language": "mysql",
+                "currentHeight": 122,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 19
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 66,
+                "end": 66,
+                "language": "mysql",
+                "currentHeight": 180,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}
