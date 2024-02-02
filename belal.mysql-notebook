@@ -2,11 +2,11 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "Script",
-    "content": "use souvenir_store;\nCREATE TABLE catagory (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE product (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    description VARCHAR(500),\n    catagory INT,\n    FOREIGN key (catagory) references catagory(id),\n    price FLOAT NOT NULL,\n    amount INT NOT NULL,\n    remarks VARCHAR(500)\n);\nALTER TABLE product AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE image (\n    name VARCHAR(30) PRIMARY KEY,\n    product INT(10),\n    FOREIGN KEY (product) references product(id)\n);\nCREATE TABLE paymentInfo (\n    creditCardNo VARCHAR(16) PRIMARY KEY,\n    cardExpiration DATE NOT NULL,\n    holderName VARCHAR(50) NOT NULL,\n    bank VARCHAR(20) NOT NULL \n);\n\nCREATE TABLE user (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    houseNO VARCHAR(20) NOT NULL,\n    street VARCHAR(50) NOT NULL,\n    city VARCHAR(30) NOT NULL,\n    country VARCHAR (30) NOT NULL,\n    dob DATE NOT NULL,\n    identificationNO VARCHAR(30) UNIQUE NOT NULL,\n    email VARCHAR(50) NOT NULL UNIQUE,\n    tel VARCHAR(20) NOT NULL,\n    payment VARCHAR(16) NOT NULL,\n    FOREIGN KEY (payment) REFERENCES paymentInfo(creditCardNo),\n    password VARCHAR(12) NOT NULL,\n    username VARCHAR(13) NOT NULL UNIQUE\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE manager (\n    username VARCHAR(13) PRIMARY KEY,\n    password VARCHAR(12) NOT NULL\n);\n\n\n-- CREATE TABLE cart (\n  --  id INT AUTO_INCREMENT PRIMARY KEY,\n    \n--)\n\nINSERT INTO manager VALUE ('BelalHmeidat', 'password');\n\nINSERT INTO paymentInfo (creditCardNo, cardExpiration, holderName, bank)  VALUE ('0000111122223333', '2028-10-20', 'Muhammad Rabbi', 'BOP');\n\nINSERT INTO user VALUE ();\n\nSELECT * from user;\n",
+    "content": "use souvenir_store;\nCREATE TABLE category (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE product (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    description VARCHAR(500),\n    category INT,\n    FOREIGN key (category) references category(id),\n    price FLOAT NOT NULL,\n    amount INT NOT NULL,\n    remarks VARCHAR(500)\n);\nALTER TABLE product AUTO_INCREMENT = 1000000000;\nALTER TABLE product ADD COLUMN discountPercent INT;\n\nCREATE TABLE productPhoto (\n    name VARCHAR(30) PRIMARY KEY,\n    product INT(10),\n    FOREIGN KEY (product) references product(id)\n);\nCREATE TABLE paymentInfo (\n    creditCardNo VARCHAR(16) PRIMARY KEY,\n    cardExpiration DATE NOT NULL,\n    holderName VARCHAR(50) NOT NULL,\n    bank VARCHAR(20) NOT NULL \n);\n\nCREATE TABLE user (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    houseNO VARCHAR(20) NOT NULL,\n    street VARCHAR(50) NOT NULL,\n    city VARCHAR(30) NOT NULL,\n    country VARCHAR (30) NOT NULL,\n    dob DATE NOT NULL,\n    identificationNO VARCHAR(30) UNIQUE NOT NULL,\n    email VARCHAR(50) NOT NULL UNIQUE,\n    tel VARCHAR(20) NOT NULL,\n    payment VARCHAR(16) NOT NULL,\n    FOREIGN KEY (payment) REFERENCES paymentInfo(creditCardNo),\n    password VARCHAR(12) NOT NULL,\n    username VARCHAR(13) NOT NULL UNIQUE\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE manager (\n    username VARCHAR(13) PRIMARY KEY,\n    password VARCHAR(12) NOT NULL\n);\n\n\nCREATE TABLE cart (\n  userId INT NOT NULL,\n  productId INT NOT NULL,\n  quantity INT NOT NULL,\n  FOREIGN KEY (userId) REFERENCES user(id),\n  FOREIGN KEY (productId) REFERENCES product(id),\n  PRIMARY KEY (userId, productId)\n);\n\nCREATE TABLE userOrderTb(\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    userId INT(10) NOT NULL,\n    status VARCHAR(20) NOT NULL,\n    date DATETIME NOT NULL,\n    total DOUBLE NOT NULL,\n    FOREIGN KEY (userId) REFERENCES user(id)\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE productOrderTb (\n    orderId INT(10) NOT NULL,\n    productId INT(10) NOT NULL,\n    quantity INT NOT NULL,\n    FOREIGN KEY (productId) REFERENCES product(id),\n    FOREIGN KEY (orderId) REFERENCES userOrderTb(id)\n);\n\nINSERT INTO manager VALUE ('BelalHmeidat', 'password');\nINSERT INTO category (name) VALUES ('Handcraft'), ('Ceramic'), ('Natural Product'), ('Food');\nINSERT INTO product (name, description, category, price, amount, remarks, discountPercent) VALUE ('Farming Rack', '10,000 years old farming rack', '1', 10000, 200, 'No Returns', 10);\nINSERT INTO productPhoto VALUES ('rack.jpg', 1000000000), ('rack2.jpg', 1000000000);\nINSERT INTO paymentInfo (creditCardNo, cardExpiration, holderName, bank)  VALUE ('0000111122223333', '2028-10-20', 'Muhammad Rabbi', 'BOP');\nSELECT * from user;\nSELECT * FROM category;\nSELECT * FROM product;\nSELECT * FROM productPhoto;\nSELECT * FROM cart;\nSELECT * FROM userOrderTb;\nSELECT * FROM productOrderTb;\n",
     "options": {
         "tabSize": 4,
-        "indentSize": 4,
         "insertSpaces": true,
+        "indentSize": 4,
         "defaultEOL": "LF",
         "trimAutoWhitespace": true
     },
@@ -15,19 +15,19 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 46,
-                    "column": 25
+                    "lineNumber": 86,
+                    "column": 20
                 },
                 "position": {
-                    "lineNumber": 46,
-                    "column": 25
+                    "lineNumber": 86,
+                    "column": 20
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 39,
+                "lineNumber": 1,
                 "column": 1
             },
             "firstPositionDeltaTop": 0
@@ -41,15 +41,20 @@
         {
             "state": {
                 "start": 1,
-                "end": 64,
+                "end": 85,
                 "language": "mysql",
                 "result": {
-                    "type": "resultIds",
-                    "list": [
-                        "68bea737-6695-4524-897c-3e25b308596d"
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "249a0ade-bec6-4c61-e504-773750e1b1c5",
+                            "content": "OK, 0 records retrieved in 21.581ms"
+                        }
                     ]
                 },
-                "currentHeight": 36,
+                "currentHeight": 94.5,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -91,216 +96,147 @@
                         "delimiter": ";",
                         "span": {
                             "start": 441,
-                            "length": 129
+                            "length": 52
                         },
-                        "contentStart": 443,
+                        "contentStart": 442,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 570,
+                            "start": 493,
+                            "length": 136
+                        },
+                        "contentStart": 495,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 629,
                             "length": 174
                         },
-                        "contentStart": 571,
+                        "contentStart": 630,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 744,
+                            "start": 803,
                             "length": 575
                         },
-                        "contentStart": 746,
+                        "contentStart": 805,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1319,
+                            "start": 1378,
                             "length": 99
                         },
-                        "contentStart": 1321,
+                        "contentStart": 1380,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1418,
-                            "length": 132
+                            "start": 1477,
+                            "length": 227
                         },
-                        "contentStart": 1484,
+                        "contentStart": 1480,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1550,
-                            "length": 142
+                            "start": 1704,
+                            "length": 263
                         },
-                        "contentStart": 1552,
+                        "contentStart": 1706,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1692,
-                            "length": 6
+                            "start": 1967,
+                            "length": 228
                         },
-                        "contentStart": 1694,
+                        "contentStart": 1969,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2195,
+                            "length": 57
+                        },
+                        "contentStart": 2197,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2252,
+                            "length": 14
+                        },
+                        "contentStart": 2253,
                         "state": 3
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1692,
-                            "length": 28
+                            "start": 2252,
+                            "length": 94
                         },
-                        "contentStart": 1694,
+                        "contentStart": 2253,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 1720,
-                            "length": 2
+                            "start": 2346,
+                            "length": 183
                         },
-                        "contentStart": 1719,
+                        "contentStart": 2347,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2529,
+                            "length": 85
+                        },
+                        "contentStart": 2530,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2614,
+                            "length": 141
+                        },
+                        "contentStart": 2615,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2755,
+                            "length": 7
+                        },
+                        "contentStart": 2756,
                         "state": 3
                     }
                 ]
             },
-            "data": [
-                {
-                    "tabId": "f1ce7e7c-ef17-45b7-c463-4ebdc46e04ae",
-                    "resultId": "68bea737-6695-4524-897c-3e25b308596d",
-                    "rows": [
-                        {
-                            "0": 1000000000,
-                            "1": "Belal Hmeidat",
-                            "2": "12",
-                            "3": "Qurna, Surif",
-                            "4": "Hebron",
-                            "5": "Palestinian Territories",
-                            "6": "2001-10-20",
-                            "7": "1213141",
-                            "8": "bhmeid00@estudiantes.unileon.es",
-                            "9": "592784450",
-                            "10": "1111222233334444",
-                            "11": "123456",
-                            "12": "bbbb"
-                        }
-                    ],
-                    "columns": [
-                        {
-                            "title": "id",
-                            "field": "0",
-                            "dataType": {
-                                "type": 4
-                            }
-                        },
-                        {
-                            "title": "name",
-                            "field": "1",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "houseNO",
-                            "field": "2",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "street",
-                            "field": "3",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "city",
-                            "field": "4",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "country",
-                            "field": "5",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "dob",
-                            "field": "6",
-                            "dataType": {
-                                "type": 28
-                            }
-                        },
-                        {
-                            "title": "identificationNO",
-                            "field": "7",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "email",
-                            "field": "8",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "tel",
-                            "field": "9",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "payment",
-                            "field": "10",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "password",
-                            "field": "11",
-                            "dataType": {
-                                "type": 17
-                            }
-                        },
-                        {
-                            "title": "username",
-                            "field": "12",
-                            "dataType": {
-                                "type": 17
-                            }
-                        }
-                    ],
-                    "executionInfo": {
-                        "text": "OK, 1 record retrieved in 0.792ms"
-                    },
-                    "totalRowCount": 1,
-                    "hasMoreRows": false,
-                    "currentPage": 0,
-                    "index": 0,
-                    "sql": "\nSELECT * from user;"
-                }
-            ]
+            "data": []
         },
         {
             "state": {
-                "start": 65,
-                "end": 65,
+                "start": 86,
+                "end": 92,
                 "language": "mysql",
-                "currentHeight": 122,
+                "currentHeight": 154.296875,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -310,6 +246,69 @@
                         },
                         "contentStart": 0,
                         "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 19,
+                            "length": 24
+                        },
+                        "contentStart": 20,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 43,
+                            "length": 23
+                        },
+                        "contentStart": 44,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 66,
+                            "length": 28
+                        },
+                        "contentStart": 67,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 94,
+                            "length": 20
+                        },
+                        "contentStart": 95,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 114,
+                            "length": 27
+                        },
+                        "contentStart": 115,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 141,
+                            "length": 30
+                        },
+                        "contentStart": 142,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 171,
+                            "length": 0
+                        },
+                        "contentStart": 170,
+                        "state": 3
                     }
                 ]
             },
@@ -317,8 +316,8 @@
         },
         {
             "state": {
-                "start": 66,
-                "end": 66,
+                "start": 93,
+                "end": 93,
                 "language": "mysql",
                 "currentHeight": 180,
                 "statements": [
@@ -329,7 +328,7 @@
                             "length": 0
                         },
                         "contentStart": 0,
-                        "state": 0
+                        "state": 3
                     }
                 ]
             },

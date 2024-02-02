@@ -19,7 +19,7 @@
             
          }
         //getters
-        public function getUserId(){
+        public function getId(){
             return $this->id;
         }
         public function getName(){
@@ -31,7 +31,7 @@
         public function getPassword(){
             return $this->password;
         }
-        public function getUserName(){
+        public function getUsername(){
             return $this->username;
         }
         public function getDob(){
@@ -68,8 +68,8 @@
         public function setPassword($password){
             $this->password = $password;
         }
-        public function setUserName($userName){
-            $this->username = $userName;
+        public function setUsername($username){
+            $this->username = $username;
         }
         public function setDob($dob){
             $this->dob = $dob;

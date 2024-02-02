@@ -1,16 +1,15 @@
 <?php
-    include 'dbconfig.in.php';
 
 class CategoryDB {
 
 
-    public static function createConnection() {
+    private static function createConnection() {
         DatabaseHelper::createConnection();
         // User::$idCounter = ProductDB::getMaxId() ?? User::$idCounter; //if there are no students in the database, the idCounter will have initial value
     }
 
     public static function getAllCategories() {
-        // $connection = DatabaseHelper::createConnection();
+        self::createConnection();
         $sql = "SELECT * FROM category";
         $statement = DatabaseHelper::runQuery($sql, null);
         $catagories = array();
@@ -22,6 +21,7 @@ class CategoryDB {
     }
 
     public static function getCategory($id){
+        self::createConnection();
         $sql = "SELECT * FROM category WHERE id = :id";
         $parameters = array(':id' => $id);
         $statement = DatabaseHelper::runQuery($sql, $parameters);
@@ -32,6 +32,7 @@ class CategoryDB {
     }
 
     public static function updateCategory($id, $name){
+        self::createConnection();
         $sql = "UPDATE category SET name = :name WHERE id = :id";
         $parameters = array(':id' => $id, ':name' => $name);
         $statement = DatabaseHelper::runQuery($sql, $parameters);
@@ -41,6 +42,7 @@ class CategoryDB {
     }
 
     public static function addCategory($id, $name){
+        self::createConnection();
         $sql = "INSERT INTO category (id, name) VALUES (:id, :name)";
         $parameters = array(':id' => $id, ':name' => $name);
         $statement = DatabaseHelper::runQuery($sql, $parameters);
@@ -51,6 +53,7 @@ class CategoryDB {
 
 
     public static function deleteCategory($id){
+        self::createConnection();
         $sql = "DELETE FROM category WHERE id = :id";
         $parameters = array(':id' => $id);
         $statement = DatabaseHelper::runQuery($sql, $parameters);

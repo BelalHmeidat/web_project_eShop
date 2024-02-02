@@ -66,6 +66,6 @@
     <p>
         Your ID is: <?php echo $id; ?>
     <p>
-        Click here to <a href="../actions/login.php">login</a>!
+        Click here to <a href="../web_pages/home.php?page=login">login</a>!
     </p>
 </body>

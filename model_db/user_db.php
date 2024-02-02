@@ -1,6 +1,4 @@
 <?php
-    include '../dbconfig.in.php';
-    // include '../models/user.php';
 class UserDB {
         private static function createConnection() {
             DatabaseHelper::createConnection();
@@ -136,5 +134,139 @@ class UserDB {
                 return true;
             else
                 return false;
+        }
+
+        public static function updateProductQuantityInCart($userID, $productID, $quantity){
+            self::createConnection();
+            if (!self::alreadyInCart($userID, $productID)) return false;
+            $sql = "UPDATE cart SET quantity = :quantity WHERE userId = :userId AND productId = :productId";
+            $parameters = array(':userId' => $userID, ':productId' => $productID, ':quantity' => $quantity);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public static function addOneToCart($userID, $productID){ //called when the user clicks the add to cart button from the product page
+            self::createConnection();
+            if (self::alreadyInCart($userID, $productID)){
+                $sql = "UPDATE cart SET quantity = quantity + 1 WHERE userId = :userId AND productId = :productId";
+            }
+            else {
+                $sql = "INSERT INTO cart (userId, productId, quantity) VALUES (:userId, :productId, 1)";
+            }
+            $parameters = array(':userId' => $userID, ':productId' => $productID);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        private static function alreadyInCart($userID, $productID){
+            $sql = "SELECT * FROM cart WHERE userId = :userId AND productId = :productId";
+            $parameters = array(':userId' => $userID, ':productId' => $productID);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public static function deleteFromCart($userID, $productID){
+            self::createConnection();
+            $sql = "DELETE FROM cart WHERE userId = :userId AND productId = :productId";
+            $parameters = array(':userId' => $userID, ':productId' => $productID);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public static function getCart($id){
+            self::createConnection();
+            $sql = "SELECT productId, quantity FROM cart WHERE userId = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            $products = array();
+            while ($product = $statement->fetch()) {
+                $products[] = $product;
+            }
+            if (empty($products))
+                return null;
+            else
+                return $products;
+        }
+
+        public static function getCartTotal($id){
+            self::createConnection();
+            $sql = "SELECT SUM(price * quantity) FROM cart JOIN product ON cart.productId = product.id WHERE userId = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            return $statement->fetch()[0];
+        }
+
+        public static function placeAnOrder($userId, $date, $total){
+            self::createConnection();
+            $sql = "INSERT INTO userOrderTb (userId, status, date, total) VALUES (:userId, 'waiting', :date, :total)";
+            $parameters = array(':userId' => $userId, ':date' => $date, ':total' => $total);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return null;
+            else {
+                $sql = "SELECT id FROM userOrderTb WHERE userId = :userId AND date = :date AND total = :total AND status = 'waiting'";
+                $parameters = array(':userId' => $userId, ':date' => $date, ':total' => $total);
+                $statement = DatabaseHelper::runQuery($sql, $parameters);
+                return $statement->fetch()[0];
+            }
+        }
+
+        public static function addProductToOrder($productId, $orderId, $quantity){
+            self::createConnection();
+            $sql = "INSERT INTO productOrderTb (productId, orderId, quantity) VALUES (:productId, :orderId, :quantity)";
+            $parameters = array(':productId' => $productId, ':orderId' => $orderId, ':quantity' => $quantity);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else return true;
+        }
+
+        public static function getOrder($id){
+            self::createConnection();
+            $sql = "SELECT * FROM userOrderTb WHERE id = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return null;
+            else
+                return $statement->fetch();
+        }
+
+        public static function getOrderItems($id){
+            self::createConnection();
+            $sql = "SELECT * FROM productOrderTb JOIN product ON productOrderTb.productId = product.id WHERE orderId = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            $products = array();
+            while ($product = $statement->fetch()) {
+                $products[] = $product;
+            }
+            if (empty($products))
+                return null;
+            else
+                return $products;
+        }
+
+        public static function emptyCart($id){
+            self::createConnection();
+            $sql = "DELETE FROM cart WHERE userId = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
         }
     }

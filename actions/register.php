@@ -155,7 +155,7 @@
         </fieldset>
         <!-- <button type="submit">Register</button> -->
         <input type="submit" value="continue">
-        <input type="button" value="back" onclick="window.location.href='../actions/login.php'"/>
+        <input type="button" value="back" onclick="window.location.href='../web_pages/home.php?page=login'"/>
         <br>
         <?php if(isset($errorMessage)) echo "<label style='color:red'>$errorMessage</label>" ?>
         </form>

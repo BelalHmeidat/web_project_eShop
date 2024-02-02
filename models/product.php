@@ -7,7 +7,8 @@ class Product {
     private $amount;
     private $category;
     private $remarks;
-    private $photos;
+
+    private $discountPercent;
 
     public function __construct(){ //default constructor
         
@@ -42,8 +43,8 @@ class Product {
         return $this->remarks;
     }
 
-    public function getPhotos() {
-        return $this->photos;
+    public function getDiscount() {
+        return $this->discountPercent;
     }
 
     //setters
@@ -72,7 +73,7 @@ class Product {
         $this->remarks = $remarks;
     }
 
-    public function setPhotos($photos) {
-        $this->photos = $photos;
+    public function setDiscount($discount) {
+        $this->discountPercent = $discount;
     }
 }

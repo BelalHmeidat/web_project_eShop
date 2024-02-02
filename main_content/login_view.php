@@ -1,9 +1,10 @@
 <?php
 
-    include '../models/user.php';
-    include '../model_db/user_db.php';
-
-    session_start();
+    if (isset($_SESSION["user"])){
+        $user = $_SESSION["user"];
+        header("Location: ../web_pages/home.php");
+        return;
+    }
 
     $errorMessage;
     function checkCredentials(){
@@ -44,48 +45,38 @@
     }
 
     if (checkCredentials()){
-        header("Location: ../web_pages/catalog.php");
+        header("Location: ../web_pages/home.php");
     }
     else {
         session_destroy();
     }
 
-
 ?>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="../styling/common_style.css">
-</head>
-<body>
-    <h1>Login</h1>
-    <h2>Enter your username and password</h2>
-    <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
-        <fieldset>
-            <legend>Login Information</legend>
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <br>
-            <input type="submit" value="Login">
-        </fieldset>
-        <?php if(isset($errorMessage)) echo "<label style='color:red'>$errorMessage</label>" ?>
-    </form>
-    <p>
-        Don't have an account? <a href="register.php">Register</a>
-    </p>
-    <p>
-        <a href="catalog.php">Continue as guest</a>
-    </p>
-</body>
+    <h1 class='login'>Login</h1>
+    <h2 class='login'>Enter your username and password</h2>
+<main>
+<form action="../web_pages/home.php?page=login" method="post">
+    <fieldset>
+        <legend>Login Information</legend>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <input type="submit" value="Login">
+    </fieldset>
+    <?php if(isset($errorMessage)) echo "<label style='color:red'>$errorMessage</label>" ?>
+</form>
+<p>
+    Don't have an account? <a href="register.php">Register</a>
+</p>
+<p>
+    <a href="catalog.php">Continue as guest</a>
+</p>
+</main>
 <footer>
     <a href="admin_login.php">Admin Login</a>
 </footer>
-</html>
 
 
