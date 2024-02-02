@@ -19,8 +19,12 @@ if (!isset($orderId)){
 }
 
 foreach ($cartItems as $item){
-    if (!UserDB::addProductToOrder($item['productId'], $orderId, $item['quantity'])){
-        header("Location: ../web_pages/error_page.html");
+    if (!ProductDB::addProductToOrder($item['productId'], $orderId, $item['quantity'])){
+        header("Location: ./error_pages/error_page.html");
+        return;
+    }
+    if (!ProductDB::updateProductAmount($item['productId'], $item['quantity'])){
+        header("Location: ./error_pages/error_page.html");
         return;
     }
 }
@@ -29,5 +33,5 @@ unset($_SESSION['cartItems']);
 
 ?>
 
-<p>Order successfully placed! Ref No.: <a href='../web_pages/order_page.php?id=<?php echo $orderId?>' target="_blank"><?php echo $orderId?></p>
+<p>Order successfully placed! Ref No.: <a href='./web_pages/order_page.php?id=<?php echo $orderId?>' target="_blank"><?php echo $orderId?></p>
 

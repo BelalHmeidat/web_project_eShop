@@ -7,12 +7,12 @@
     }
     $product; $category; $photos; $mainImg;
     if (!isset($_GET["id"])) { //id of the product visited
-        header("Location: ../web_pages/error_page.html");
+        header("Location: ./web_pages/error_page.html");
         return;
     }
     $product = ProductDB::getProduct($_GET["id"]);
     if($product == null) {
-        header("Location: ../web_pages/not_found_page.php?id=" . $_GET["id"]);
+        header("Location: ./web_pages/not_found_page.php?id=" . $_GET["id"]);
         return;
     }
     $photos = ProductDB::getProductPhotos($product->getId());
@@ -36,20 +36,32 @@
             $message = "Product added to cart!";
         }
     }
-
+    if (isset($_POST['amount'])){
+        $id = $_GET['id'];
+        $amount = $_POST['amount'];
+        if (!ProductDB::changeAmount($id, $amount)){
+            $message = "Couldn't change the amount!";
+            $flag = false;
+        }
+        else {
+            $flag = true;
+            $message = "Amount changed!";
+            $product = ProductDB::getProduct($_GET["id"]);
+        }
+    }
     ?>
 <h1><?php echo $product->getName();?></h1>
 <p>Reference No.: <?php echo $product->getId();?></p>
 <div class="img-desc-area">
     <div class="img-catalog">
         <div class="main-img">
-            <img src="../images/<?php echo $mainImg?>" alt="<?php echo $mainImg;?>" width="400" height="400">
+            <img src="./images/<?php echo $mainImg?>" alt="<?php echo $mainImg;?>" width="400" height="400">
         </div>
         <div class="thumbnails">
         <?php foreach ($photos as $photo){?>
             <?php $imageName = $photo['name'];
             $id = $_GET['id']?>
-            <a href="../web_pages/home.php?page=product&id=<?php echo $id?>&img=<?php echo $imageName?>"><img src="../images/<?php echo $imageName;?>" alt="<?php echo $product->getName();?>" width="100" height="100"></a>
+            <a href="./index.php?page=product&id=<?php echo $id?>&img=<?php echo $imageName?>"><img src="./images/<?php echo $imageName;?>" alt="<?php echo $product->getName();?>" width="100" height="100"></a>
         <?php }?>
         </div>
     </div>
@@ -73,15 +85,27 @@
     <div>
         <?php if($mode == 0){
             $buttonText = "Login to place an order";
-            $link = "../web_pages/home.php?page=login";
+            $link = "./index.php?page=login";
             ?>
             <a href="<?php echo $link?>"><button><?php echo $buttonText?></button></a>
-        <?php }else{?>
-                <form method="POST" action="../web_pages/home.php?page=product&id=<?php echo $id?>">
+        <?php }else if ($mode == 1){?>
+                <form method="POST" action="./index.php?page=product&id=<?php echo $id?>">
                     <input type="hidden" name="id" value="<?php echo $product->getId();?>">
                     <input type='submit' name="submit" value="Add to Cart">
                 </form>
-                <p <?php if (isset($flag)) echo $flag ? "class='success'" : "class='error'";?>><?php echo $message ?? ''?></p>
-                <?php }?>
+                <?php } else if ($mode == 2){?>
+                <form method="POST" action="./index.php?page=product&id=<?php echo $id?>">
+                    <label for='amount'>Quantity: </label>
+                    <input type='number' name = 'amount' value="<?php echo $product->getAmount();?>" min='0'>
+                    <input type='submit' name="submit" value="Change">
+                </form>
+                    <?php }
+                $class ='success';
+                if (isset($flag)){
+                    if (!$flag) $class = 'error';
+                }
+                ?>
+                <p class='<?php echo $class?>'><?php echo $message ?? ''?></p>
+                
     </div>
 </div>

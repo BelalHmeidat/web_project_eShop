@@ -33,8 +33,15 @@ class UserDB {
             $sql = "SELECT * FROM user WHERE username = :username";
             $parameters = array(':username' => $username);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
-            if ($statement->rowCount() == 0)
-                return null;
+            if ($statement->rowCount() == 0){ //check managers table
+                $sql = "SELECT * FROM manager WHERE username = :username";
+                $parameters = array(':username' => $username);
+                $statement = DatabaseHelper::runQuery($sql, $parameters);
+                if ($statement->rowCount() == 0)
+                    return null;
+                else
+                    return $statement->fetchObject('User');
+            }
             else
                 return $statement->fetchObject('User');
         }
@@ -86,11 +93,18 @@ class UserDB {
             $sql = "SELECT * FROM user WHERE username = :username";
             $parameters = array(':username' => $username);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
-            if ($statement->rowCount() == 0)
-                return true;
+            if ($statement->rowCount() == 0){ //check managers table for the username
+                $sql = "SELECT * FROM manager WHERE username = :username";
+                $parameters = array(':username' => $username);
+                $statement = DatabaseHelper::runQuery($sql, $parameters);
+                if ($statement->rowCount() == 0)
+                    return true;
+                else
+                    return false;
+            }
             else
                 return false;
-        }
+            }
 
         public static function identificationUnique($identificationNO){
             self::createConnection();
@@ -130,7 +144,16 @@ class UserDB {
             $sql = "SELECT * FROM user WHERE username = :username AND password = :password";
             $parameters = array(':password' => $password, ':username' => $username);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
-            if ($statement->rowCount() == 1)
+            if ($statement->rowCount() == 0){
+                $sql = "SELECT * FROM manager WHERE username = :username AND password = :password";
+                $parameters = array(':password' => $password, ':username' => $username);
+                $statement = DatabaseHelper::runQuery($sql, $parameters);
+                if ($statement->rowCount() == 1)
+                    return true;
+                else 
+                    return false;
+            }
+            else if ($statement->rowCount() == 1)
                 return true;
             else
                 return false;
@@ -223,20 +246,11 @@ class UserDB {
             }
         }
 
-        public static function addProductToOrder($productId, $orderId, $quantity){
+        //takes both the userId and the orderId to make sure the user is authorized to view the order
+        public static function getOrder($userId, $orderId){
             self::createConnection();
-            $sql = "INSERT INTO productOrderTb (productId, orderId, quantity) VALUES (:productId, :orderId, :quantity)";
-            $parameters = array(':productId' => $productId, ':orderId' => $orderId, ':quantity' => $quantity);
-            $statement = DatabaseHelper::runQuery($sql, $parameters);
-            if ($statement->rowCount() == 0)
-                return false;
-            else return true;
-        }
-
-        public static function getOrder($id){
-            self::createConnection();
-            $sql = "SELECT * FROM userOrderTb WHERE id = :id";
-            $parameters = array(':id' => $id);
+            $sql = "SELECT * FROM userOrderTb WHERE id = :orderId AND userId = :userId";
+            $parameters = array(':orderId' => $orderId, ':userId' => $userId);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
             if ($statement->rowCount() == 0)
                 return null;
@@ -244,25 +258,67 @@ class UserDB {
                 return $statement->fetch();
         }
 
-        public static function getOrderItems($id){
+        public static function getOrderForEmployee($orderId){
             self::createConnection();
-            $sql = "SELECT * FROM productOrderTb JOIN product ON productOrderTb.productId = product.id WHERE orderId = :id";
-            $parameters = array(':id' => $id);
+            $sql = "SELECT * FROM userOrderTb WHERE id = :orderId";
+            $parameters = array(':orderId' => $orderId);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
-            $products = array();
-            while ($product = $statement->fetch()) {
-                $products[] = $product;
-            }
-            if (empty($products))
+            if ($statement->rowCount() == 0)
                 return null;
             else
-                return $products;
+                return $statement->fetch();
         }
+
+        public static function getOrders($id){ //userID
+            self::createConnection();
+            $sql = "SELECT * FROM userOrderTb WHERE userId = :id ORDER BY date DESC";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            $orders = array();
+            while ($order = $statement->fetch()) {
+                $orders[] = $order;
+            }
+            if (empty($orders))
+                return null;
+            else
+                return $orders;
+        }
+
+        //gets orders for employees sorted waiting status and oldest first then in progress status and newest first
+        public static function getOrdersForEmployees(){
+            self::createConnection();
+            $sql = "SELECT * FROM userOrderTb WHERE status = 'waiting' ORDER BY date";
+            $statement = DatabaseHelper::runQuery($sql, null);
+            $orders = array();
+            while ($order = $statement->fetch()) {
+                $orders[] = $order;
+            }
+            $sql = "SELECT * FROM userOrderTb WHERE status = 'In Progress' ORDER BY date DESC";
+            $statement = DatabaseHelper::runQuery($sql, null);
+            while ($order = $statement->fetch()) {
+                $orders[] = $order;
+            }
+            if (empty($orders))
+                return null;
+            else
+                return $orders;
+        } 
 
         public static function emptyCart($id){
             self::createConnection();
             $sql = "DELETE FROM cart WHERE userId = :id";
             $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else
+                return true;
+        }
+
+        public static function setOrderInfo($orderId, $status, $shippingDate){
+            self::createConnection();
+            $sql = "UPDATE userOrderTb SET shippingDate = :shippingDate, status = :status WHERE id = :orderId";
+            $parameters = array(':orderId' => $orderId, ':shippingDate' => $shippingDate, ':status' => $status);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
             if ($statement->rowCount() == 0)
                 return false;

@@ -20,8 +20,8 @@ $productId = $_GET['id'];
 
 if(!UserDB::deleteFromCart($user->getId(), $productId)){
     echo "Error deleting product from cart";
-    echo "<a href='../web_pages/home.php?page=cart'>Back to Cart</a>";
+    echo "<a href='../index.php?page=cart'>Back to Cart</a>";
     return;
 }
 
-header("Location: ../web_pages/home.php?page=cart");
+header("Location: ../index.php?page=cart");

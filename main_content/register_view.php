@@ -1,10 +1,4 @@
 <?php
-    include '../models/user.php';
-    include '../model_db/user_db.php';
-    include '../models/payment_info.php';
-    include '../model_db/payment_info_db.php';
-
-    session_start();
 
     $user = null;
     if (isset($_SESSION["user"])){
@@ -89,7 +83,7 @@
 
     
     if(checkAllFields()){
-        header("Location: ../actions/register2.php"); 
+        header("Location: ./index.php?page=register2"); 
     }
 
     function formatCardNo($cardNo){
@@ -102,12 +96,12 @@
     <html>
     <head>
         <title>Register</title>
-        <link rel="stylesheet" href="../styling/common_style.css">
+        <link rel="stylesheet" href="./styling/common_style.css">
     </head>
     <body>
         <h1>Register</h1>
         <h2>Enter your information</h2>
-        <form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+        <form method="post" action="./index.php?page=register">
         <fieldset>
             <legend>Personal Information</legend>
             <label for="name">Name</label>
@@ -155,7 +149,7 @@
         </fieldset>
         <!-- <button type="submit">Register</button> -->
         <input type="submit" value="continue">
-        <input type="button" value="back" onclick="window.location.href='../web_pages/home.php?page=login'"/>
+        <a href="./index.php"><button type='button' formnovalidate>Back</button></a>
         <br>
         <?php if(isset($errorMessage)) echo "<label style='color:red'>$errorMessage</label>" ?>
         </form>

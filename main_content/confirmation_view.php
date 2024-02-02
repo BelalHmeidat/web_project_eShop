@@ -1,8 +1,4 @@
 <?php
-    include '../models/user.php';
-    include '../models/payment_info.php';
-
-    session_start();
     $user;
     $payment;
     if (isset($_SESSION["user"]) && isset($_SESSION["payment"])){
@@ -10,7 +6,7 @@
         $payment = $_SESSION["payment"];
     }
     else {
-        header("Location: ./error_page.html.php");
+        header("Location: ./error_pages/error_page.html.php");
         return;
     }
 ?>
@@ -24,7 +20,7 @@
 <body>
 <body>
     <h1>Confirm Your Information</h1>
-    <form method="post" action="registration_complete.php">
+    <form method="post" action="./index.php?page=registrationComp">
     <fieldset>
         <legend>Personal Information</legend>
         <label for="name">Name</label>
@@ -84,9 +80,7 @@
     </fieldset>
     <!-- <button type="submit">Register</button> -->
     <input type="submit" value="confirm">
-    <input type="button" value="back" onclick="window.location.href='../actions/register.php'"/>
-    <!-- <br> -->
-    <!-- <//?php if(isset($errorMessage)) echo "<label style='color:red'>$errorMessage</label>" ?> -->
+    <a href='./index.php?page=register'><button type="button" formnovalidate>Back</button></a>
     </form>
 </body>
 </html>

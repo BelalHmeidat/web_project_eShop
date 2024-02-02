@@ -2,7 +2,7 @@
 
     if (isset($_SESSION["user"])){
         $user = $_SESSION["user"];
-        header("Location: ../web_pages/home.php");
+        header("Location: ./index.php");
         return;
     }
 
@@ -45,7 +45,7 @@
     }
 
     if (checkCredentials()){
-        header("Location: ../web_pages/home.php");
+        header("Location: ./index.php");
     }
     else {
         session_destroy();
@@ -55,7 +55,7 @@
     <h1 class='login'>Login</h1>
     <h2 class='login'>Enter your username and password</h2>
 <main>
-<form action="../web_pages/home.php?page=login" method="post">
+<form action="./index.php?page=login" method="post">
     <fieldset>
         <legend>Login Information</legend>
         <label for="username">Username:</label>

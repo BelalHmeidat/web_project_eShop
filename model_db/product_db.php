@@ -2,7 +2,7 @@
     // include '../dbconfig.in.php';
     // include '../models/product.php';
 class ProductDB {
-        public static $imagesPath = "../images"; //path to the images folder
+        public static $imagesPath = "./images"; //path to the images folder
         public static $defaultPhoto = "default.jpeg"; //default photo for students who don't have a photo set
         private static function createConnection() {
             DatabaseHelper::createConnection();
@@ -41,7 +41,7 @@ class ProductDB {
             else return $statement->rowCount();
         }
 
-        public static function searchProduct($name, $beginPrice, $endPrice){
+        public static function searchProduct($name, $beginPrice, $endPrice, $searchId = null){
             self::createConnection();
             // if(empty($beginPrice)){
             //     $beginPrice = 0; //if the begin price is empty, search from 0 and above
@@ -50,8 +50,13 @@ class ProductDB {
                 $endPrice = self::getMostExpensive() + 1; //if the end price is empty, search to the most expensive product
             }
             $name = "%" . $name . "%";
-            $sql = "SELECT * FROM product WHERE name LIKE :name AND price BETWEEN :beginPrice AND :endPrice";
-            $parameters = array(':name' => $name, ':beginPrice' => $beginPrice, ':endPrice' => $endPrice);
+            if (isset($searchId) && !empty($searchId)){
+                $sql = "SELECT * FROM product WHERE name LIKE :name AND price BETWEEN :beginPrice AND :endPrice AND id = :searchId";
+                $parameters = array(':name' => $name, ':beginPrice' => $beginPrice, ':endPrice' => $endPrice, ':searchId' => $searchId);
+            } else {
+                $sql = "SELECT * FROM product WHERE name LIKE :name AND price BETWEEN :beginPrice AND :endPrice";
+                $parameters = array(':name' => $name, ':beginPrice' => $beginPrice, ':endPrice' => $endPrice);
+            }
             $statement = DatabaseHelper::runQuery($sql, $parameters);
             if ($statement->rowCount() == 0)
                 return null;
@@ -97,7 +102,7 @@ class ProductDB {
 
         public static function addProduct($name, $description, $category, $price, $amount, $remarks, $discount){
             self::createConnection();
-            $sql = "INSERT INTO product (name, description, category, price, amount, remarks) VALUES (:name, :description, :category, :price, :amount, :remarks, :discount)";
+            $sql = "INSERT INTO product (name, description, category, price, amount, remarks, discountPercent) VALUES (:name, :description, :category, :price, :amount, :remarks, :discount)";
             $parameters = array(':name' => $name, ':description' => $description, ':category' => $category, ':price' => $price, ':amount' => $amount, ':remarks' => $remarks, ':discount' => $discount);
             $statement = DatabaseHelper::runQuery($sql, $parameters);
             if ($statement->rowCount() == 0)
@@ -105,11 +110,11 @@ class ProductDB {
             else return $statement->rowCount();
         }            
 
-        // public static function getMaxId(){
-        //     $sql = "SELECT MAX(stdId) FROM Student";
-        //     $statement = DatabaseHelper::runQuery($sql, null);
-        //     return $statement->fetch()[0];
-        // }
+        public static function getMaxId(){
+            $sql = "SELECT MAX(id) FROM product";
+            $statement = DatabaseHelper::runQuery($sql, null);
+            return $statement->fetch()[0];
+        }
 
         public static function deleteProduct($id){
             self::createConnection();
@@ -142,5 +147,60 @@ class ProductDB {
                 $products[] = $product;
             }
             return $products;
+        }
+
+        public static function addProductToOrder($productId, $orderId, $quantity){
+            self::createConnection();
+            $sql = "INSERT INTO productOrderTb (productId, orderId, quantity) VALUES (:productId, :orderId, :quantity)";
+            $parameters = array(':productId' => $productId, ':orderId' => $orderId, ':quantity' => $quantity);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else return true;
+        }
+
+        public static function updateProductAmount($productId, $quantity){//deduct when order is placed
+            self::createConnection();
+            $sql = "UPDATE product SET amount = amount - :quantity WHERE id = :productId";
+            $parameters = array(':productId' => $productId, ':quantity' => $quantity);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else return true;
+        }
+
+        public static function changeAmount($id, $quantity){
+            self::createConnection();
+            $sql = "UPDATE product SET amount = :amount WHERE id = :id";
+            $parameters = array(':id' => $id, ':amount' => $quantity);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return false;
+            else return true;
+        }
+
+        public static function getOrderItems($id){
+            self::createConnection();
+            $sql = "SELECT * FROM productOrderTb JOIN product ON productOrderTb.productId = product.id WHERE orderId = :id";
+            $parameters = array(':id' => $id);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            $products = array();
+            while ($product = $statement->fetch()) {
+                $products[] = $product;
+            }
+            if (empty($products))
+                return null;
+            else
+                return $products;
+        }
+
+        public static function addProductPhoto($productId, $photoName){
+            self::createConnection();
+            $sql = "INSERT INTO productPhoto (product, name) VALUES (:productId, :photoName)";
+            $parameters = array(':productId' => $productId, ':photoName' => $photoName);
+            $statement = DatabaseHelper::runQuery($sql, $parameters);
+            if ($statement->rowCount() == 0)
+                return null;
+            else return $statement->rowCount();
         }
     }

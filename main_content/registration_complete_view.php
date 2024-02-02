@@ -1,11 +1,4 @@
 <?php
-
-    include '../models/user.php';
-    include '../model_db/user_db.php';
-    include '../models/payment_info.php';
-    include '../model_db/payment_info_db.php';
-
-    session_start();
     $user;
     $payment;
     if (isset($_SESSION["user"]) && isset($_SESSION["payment"])){
@@ -13,7 +6,7 @@
         $payment = $_SESSION["payment"];
     }
     else {
-        header("Location: ./error_page.html.php");
+        header("Location: ./error_pages/error_page.html.php");
         return;
     }
 
@@ -46,26 +39,18 @@
 
     if (checkAddingUser()){
         session_destroy();
-        $id = UserDB::getUserByUsername($user->getUsername())->getUserId();
+        $id = UserDB::getUserByUsername($user->getUsername())->getId();
     }
     else {
-        header("Location: ./error_page.html.php");
+        header("Location: ./error_pages/error_page.html.php");
         return;
     }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registration Complete</title>
-    <link rel="stylesheet" href="../styling/common_style.css">
-</head>
-<body>
-    <p>
-        Registration Complete!
-    </p>
-    <p>
-        Your ID is: <?php echo $id; ?>
-    <p>
-        Click here to <a href="../web_pages/home.php?page=login">login</a>!
-    </p>
-</body>
+<p>
+    Registration Complete!
+</p>
+<p>
+    Your ID is: <?php echo $id; ?>
+<p>
+    Click here to <a href="./index.php?page=login">login</a>!
+</p>

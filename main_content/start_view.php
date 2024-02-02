@@ -17,7 +17,7 @@
     <div class="item">
         <figure>
         <?php $photos = ProductDB::getProductPhotos($product->getId());?>
-        <a href="./home.php?page=product&id=<?php echo $product->getId();?>"><img src="<?php echo ProductDB::$imagesPath . "/" . $photos[0]['name'];?>" alt="<?php echo $product->getName();?>" ></a>
+        <a href="./index.php?page=product&id=<?php echo $product->getId();?>"><img src="<?php echo ProductDB::$imagesPath . "/" . $photos[0]['name'];?>" alt="<?php echo $product->getName();?>" ></a>
         <figcaption><?php echo $product->getName();?></figcaption>
         </figure>
         <p><?php echo "Current Price: <span class='price'>" . $product->getPrice() . "₪";?></span></p>

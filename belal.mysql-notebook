@@ -2,7 +2,7 @@
     "type": "MySQLNotebook",
     "version": "1.0",
     "caption": "Script",
-    "content": "use souvenir_store;\nCREATE TABLE category (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE product (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    description VARCHAR(500),\n    category INT,\n    FOREIGN key (category) references category(id),\n    price FLOAT NOT NULL,\n    amount INT NOT NULL,\n    remarks VARCHAR(500)\n);\nALTER TABLE product AUTO_INCREMENT = 1000000000;\nALTER TABLE product ADD COLUMN discountPercent INT;\n\nCREATE TABLE productPhoto (\n    name VARCHAR(30) PRIMARY KEY,\n    product INT(10),\n    FOREIGN KEY (product) references product(id)\n);\nCREATE TABLE paymentInfo (\n    creditCardNo VARCHAR(16) PRIMARY KEY,\n    cardExpiration DATE NOT NULL,\n    holderName VARCHAR(50) NOT NULL,\n    bank VARCHAR(20) NOT NULL \n);\n\nCREATE TABLE user (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    houseNO VARCHAR(20) NOT NULL,\n    street VARCHAR(50) NOT NULL,\n    city VARCHAR(30) NOT NULL,\n    country VARCHAR (30) NOT NULL,\n    dob DATE NOT NULL,\n    identificationNO VARCHAR(30) UNIQUE NOT NULL,\n    email VARCHAR(50) NOT NULL UNIQUE,\n    tel VARCHAR(20) NOT NULL,\n    payment VARCHAR(16) NOT NULL,\n    FOREIGN KEY (payment) REFERENCES paymentInfo(creditCardNo),\n    password VARCHAR(12) NOT NULL,\n    username VARCHAR(13) NOT NULL UNIQUE\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE manager (\n    username VARCHAR(13) PRIMARY KEY,\n    password VARCHAR(12) NOT NULL\n);\n\n\nCREATE TABLE cart (\n  userId INT NOT NULL,\n  productId INT NOT NULL,\n  quantity INT NOT NULL,\n  FOREIGN KEY (userId) REFERENCES user(id),\n  FOREIGN KEY (productId) REFERENCES product(id),\n  PRIMARY KEY (userId, productId)\n);\n\nCREATE TABLE userOrderTb(\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    userId INT(10) NOT NULL,\n    status VARCHAR(20) NOT NULL,\n    date DATETIME NOT NULL,\n    total DOUBLE NOT NULL,\n    FOREIGN KEY (userId) REFERENCES user(id)\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE productOrderTb (\n    orderId INT(10) NOT NULL,\n    productId INT(10) NOT NULL,\n    quantity INT NOT NULL,\n    FOREIGN KEY (productId) REFERENCES product(id),\n    FOREIGN KEY (orderId) REFERENCES userOrderTb(id)\n);\n\nINSERT INTO manager VALUE ('BelalHmeidat', 'password');\nINSERT INTO category (name) VALUES ('Handcraft'), ('Ceramic'), ('Natural Product'), ('Food');\nINSERT INTO product (name, description, category, price, amount, remarks, discountPercent) VALUE ('Farming Rack', '10,000 years old farming rack', '1', 10000, 200, 'No Returns', 10);\nINSERT INTO productPhoto VALUES ('rack.jpg', 1000000000), ('rack2.jpg', 1000000000);\nINSERT INTO paymentInfo (creditCardNo, cardExpiration, holderName, bank)  VALUE ('0000111122223333', '2028-10-20', 'Muhammad Rabbi', 'BOP');\nSELECT * from user;\nSELECT * FROM category;\nSELECT * FROM product;\nSELECT * FROM productPhoto;\nSELECT * FROM cart;\nSELECT * FROM userOrderTb;\nSELECT * FROM productOrderTb;\n",
+    "content": "use souvenir_store;\nCREATE TABLE category (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL\n);\n\nCREATE TABLE product (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    description VARCHAR(500),\n    category INT,\n    FOREIGN key (category) references category(id),\n    price FLOAT NOT NULL,\n    amount INT NOT NULL,\n    remarks VARCHAR(500)\n);\nALTER TABLE product AUTO_INCREMENT = 1000000000;\nALTER TABLE product ADD COLUMN discountPercent INT;\n\nCREATE TABLE productPhoto (\n    name VARCHAR(30) PRIMARY KEY,\n    product INT(10),\n    FOREIGN KEY (product) references product(id)\n);\nCREATE TABLE paymentInfo (\n    creditCardNo VARCHAR(16) PRIMARY KEY,\n    cardExpiration DATE NOT NULL,\n    holderName VARCHAR(50) NOT NULL,\n    bank VARCHAR(20) NOT NULL \n);\n\nCREATE TABLE user (\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(50) NOT NULL,\n    houseNO VARCHAR(20) NOT NULL,\n    street VARCHAR(50) NOT NULL,\n    city VARCHAR(30) NOT NULL,\n    country VARCHAR (30) NOT NULL,\n    dob DATE NOT NULL,\n    identificationNO VARCHAR(30) UNIQUE NOT NULL,\n    email VARCHAR(50) NOT NULL UNIQUE,\n    tel VARCHAR(20) NOT NULL,\n    payment VARCHAR(16) NOT NULL,\n    FOREIGN KEY (payment) REFERENCES paymentInfo(creditCardNo),\n    password VARCHAR(12) NOT NULL,\n    username VARCHAR(13) NOT NULL UNIQUE\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE manager (\n    username VARCHAR(13) PRIMARY KEY,\n    password VARCHAR(12) NOT NULL\n);\n\n\nCREATE TABLE cart (\n  userId INT NOT NULL,\n  productId INT NOT NULL,\n  quantity INT NOT NULL,\n  FOREIGN KEY (userId) REFERENCES user(id),\n  FOREIGN KEY (productId) REFERENCES product(id),\n  PRIMARY KEY (userId, productId)\n);\n\nCREATE TABLE userOrderTb(\n    id INT(10) PRIMARY KEY AUTO_INCREMENT,\n    userId INT(10) NOT NULL,\n    status VARCHAR(20) NOT NULL,\n    date DATETIME NOT NULL,\n    total DOUBLE NOT NULL,\n    FOREIGN KEY (userId) REFERENCES user(id)\n) AUTO_INCREMENT = 1000000000;\n\nCREATE TABLE productOrderTb (\n    orderId INT(10) NOT NULL,\n    productId INT(10) NOT NULL,\n    quantity INT NOT NULL,\n    FOREIGN KEY (productId) REFERENCES product(id),\n    FOREIGN KEY (orderId) REFERENCES userOrderTb(id)\n);\n\nINSERT INTO manager VALUE ('BelalHmeidat', 'password');\nINSERT INTO category (name) VALUES ('Handcraft'), ('Ceramic'), ('Natural Product'), ('Food');\nINSERT INTO product (name, description, category, price, amount, remarks, discountPercent) VALUE ('Farming Rack', '10,000 years old farming rack', '1', 10000, 200, 'No Returns', 10);\nINSERT INTO productPhoto VALUES ('rack.jpg', 1000000000), ('rack2.jpg', 1000000000);\nINSERT INTO paymentInfo (creditCardNo, cardExpiration, holderName, bank)  VALUE ('0000111122223333', '2028-10-20', 'Muhammad Rabbi', 'BOP');\nSELECT id, username, password from user;\nSELECT * FROM category;\nSELECT * FROM product;\nSELECT * FROM productPhoto;\nSELECT * FROM cart;\nSELECT * FROM userOrderTb;\nSELECT * FROM productOrderTb;\nSELECT * FROM manager;\nDELETE FROM product WHERE name = 'jar';\nDELETE FROM productPhoto WHERE 1=1;\n\nALTER TABLE userOrderTb ADD COLUMN shippingDate DATETIME;",
     "options": {
         "tabSize": 4,
         "insertSpaces": true,
@@ -15,22 +15,22 @@
             {
                 "inSelectionMode": false,
                 "selectionStart": {
-                    "lineNumber": 86,
-                    "column": 20
+                    "lineNumber": 97,
+                    "column": 30
                 },
                 "position": {
-                    "lineNumber": 86,
-                    "column": 20
+                    "lineNumber": 97,
+                    "column": 30
                 }
             }
         ],
         "viewState": {
             "scrollLeft": 0,
             "firstPosition": {
-                "lineNumber": 1,
+                "lineNumber": 82,
                 "column": 1
             },
-            "firstPositionDeltaTop": 0
+            "firstPositionDeltaTop": -1
         },
         "contributionsState": {
             "editor.contrib.folding": {},
@@ -49,12 +49,12 @@
                         {
                             "type": 4,
                             "index": 0,
-                            "resultId": "249a0ade-bec6-4c61-e504-773750e1b1c5",
-                            "content": "OK, 0 records retrieved in 21.581ms"
+                            "resultId": "3773bb2c-8dd4-4728-fa5d-00d81b92ef86",
+                            "content": "OK, 2 rows affected in 8.101ms"
                         }
                     ]
                 },
-                "currentHeight": 94.5,
+                "currentHeight": 94.828125,
                 "statements": [
                     {
                         "delimiter": ";",
@@ -234,15 +234,26 @@
         {
             "state": {
                 "start": 86,
-                "end": 92,
+                "end": 96,
                 "language": "mysql",
-                "currentHeight": 154.296875,
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "736aa8c8-1a52-49c9-8fdb-09b340f5ee0b",
+                            "content": "OK, 1 row affected in 1.541ms"
+                        }
+                    ]
+                },
+                "currentHeight": 352,
                 "statements": [
                     {
                         "delimiter": ";",
                         "span": {
                             "start": 0,
-                            "length": 19
+                            "length": 40
                         },
                         "contentStart": 0,
                         "state": 0
@@ -250,64 +261,91 @@
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 19,
+                            "start": 40,
                             "length": 24
                         },
-                        "contentStart": 20,
+                        "contentStart": 41,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 43,
+                            "start": 64,
                             "length": 23
                         },
-                        "contentStart": 44,
+                        "contentStart": 65,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 66,
+                            "start": 87,
                             "length": 28
                         },
-                        "contentStart": 67,
+                        "contentStart": 88,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 94,
+                            "start": 115,
                             "length": 20
                         },
-                        "contentStart": 95,
+                        "contentStart": 116,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 114,
+                            "start": 135,
                             "length": 27
                         },
-                        "contentStart": 115,
+                        "contentStart": 136,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 141,
+                            "start": 162,
                             "length": 30
                         },
-                        "contentStart": 142,
+                        "contentStart": 163,
                         "state": 0
                     },
                     {
                         "delimiter": ";",
                         "span": {
-                            "start": 171,
-                            "length": 0
+                            "start": 192,
+                            "length": 23
                         },
-                        "contentStart": 170,
+                        "contentStart": 193,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 215,
+                            "length": 40
+                        },
+                        "contentStart": 217,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 255,
+                            "length": 36
+                        },
+                        "contentStart": 257,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 291,
+                            "length": 1
+                        },
+                        "contentStart": 290,
                         "state": 3
                     }
                 ]
@@ -316,8 +354,8 @@
         },
         {
             "state": {
-                "start": 93,
-                "end": 93,
+                "start": 97,
+                "end": 97,
                 "language": "mysql",
                 "currentHeight": 180,
                 "statements": [
@@ -325,10 +363,10 @@
                         "delimiter": ";",
                         "span": {
                             "start": 0,
-                            "length": 0
+                            "length": 57
                         },
                         "contentStart": 0,
-                        "state": 3
+                        "state": 0
                     }
                 ]
             },

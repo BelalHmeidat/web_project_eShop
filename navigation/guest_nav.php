@@ -1,5 +1,5 @@
 
-<a href="../web_pages/home.php?page=start">Home</a>
-<a href="../web_pages/home.php?page=search">Search</a>
-<a href="../web_pages/home.php?page=login">Login</a>
-<a href="../actions/register.php">Register</a>
+<a href="./index.php?page=start">Home</a>
+<a href="./index.php?page=search">Search</a>
+<a href="./index.php?page=login">Login</a>
+<a href="./index.php?page=register">Register</a>

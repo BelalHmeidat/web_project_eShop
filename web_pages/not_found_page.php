@@ -12,7 +12,7 @@
 <body>
     <h1>Product with ID: <?php echo $id?> not found!</h1>
     <p>
-        <a href="./home.php">Back to Home</a>
+        <a href="./index.php">Back to Home</a>
     </p>
 </body>
 </html>
